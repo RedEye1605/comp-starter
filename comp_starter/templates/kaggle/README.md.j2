@@ -1,0 +1,30 @@
+# {{ project_name }} — Kaggle Competition
+
+**Kaggle Slug:** {{ kaggle_slug }}
+**Competition URL:** https://www.kaggle.com/competitions/{{ kaggle_slug }}
+**Created:** {{ date }}
+
+## Setup
+
+```bash
+# Install kaggle CLI
+pip install kaggle
+
+# Authenticate (place kaggle.json in ~/.kaggle/)
+# Download data
+kaggle competitions download -c {{ kaggle_slug }} -p data/raw/
+
+# Install project dependencies
+pip install -r requirements.txt
+```
+
+## Competition Rules
+
+- **Max submissions/day:** Check competition page
+- **Late submission:** Check if allowed
+- **Team merge deadline:** Check competition page
+
+## Notes
+
+- Data downloaded to `data/raw/` — do not modify
+- Use `comp-starter submit --file <path>` to version submissions

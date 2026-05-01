@@ -1,0 +1,34 @@
+# {{ project_name }} — Hackathon
+
+**Type:** {{ type }} | **Created:** {{ date }}
+
+## Quick Start
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the API
+uvicorn app.main:app --reload --port 8000
+
+# Run the dashboard
+streamlit run app/dashboard.py
+```
+
+## Architecture
+
+```
+app/
+├── main.py          # FastAPI endpoints
+├── dashboard.py     # Streamlit dashboard
+├── model_server.py  # Model inference service
+└── static/          # Static assets
+```
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | / | Health check |
+| POST | /predict | Make a prediction |
+| GET | /docs | API documentation |
