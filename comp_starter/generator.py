@@ -12,6 +12,20 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
+CUSTOM_TEMPLATES_DIR = Path.home() / "Obsidian/RhendyVault/03_templates"
+
+
+def list_custom_templates() -> list[dict]:
+    """List custom templates from vault templates dir."""
+    results = []
+    if CUSTOM_TEMPLATES_DIR.is_dir():
+        for d in sorted(CUSTOM_TEMPLATES_DIR.iterdir()):
+            if d.is_dir() and not d.name.startswith("."):
+                results.append({"name": d.name, "path": str(d), "description": f"Custom template from {d.name}"})
+        # Also check for .j2 files directly
+        for f in sorted(CUSTOM_TEMPLATES_DIR.glob("*.j2")):
+            results.append({"name": f.stem, "path": str(f), "description": f"Custom template: {f.stem}"})
+    return results
 
 
 def _get_template_dir(template_type: str) -> Path:
@@ -245,7 +259,7 @@ def _try_kaggle_download(project_dir: Path, slug: str) -> None:
         pass  # kaggle CLI not available or competition not found — skip silently
 
 
-def generate_project(name: str, project_type: str, kaggle_slug: str | None = None) -> Path:
+def generate_project(name: str, project_type: str, kaggle_slug: str | None = None, custom_path: str | None = None) -> Path:
     """Generate a full competition project scaffold."""
     project_dir = Path.cwd() / name
 
@@ -295,6 +309,14 @@ def generate_project(name: str, project_type: str, kaggle_slug: str | None = Non
             (project_dir / d).mkdir(parents=True, exist_ok=True)
 
         _generate_research_notebooks(project_dir, name)
+
+    elif project_type == "custom":
+        custom_dir = Path(custom_path) if custom_path else Path.home() / "Obsidian/RhendyVault/03_templates"
+        if not custom_dir.is_dir():
+            raise FileNotFoundError(f"Custom template directory not found: {custom_dir}")
+        _render_templates(custom_dir, project_dir, variables)
+        for d in ["data/raw", "data/processed", "submissions", "models", "notebooks"]:
+            (project_dir / d).mkdir(parents=True, exist_ok=True)
 
     # Init git
     _init_git(project_dir)
