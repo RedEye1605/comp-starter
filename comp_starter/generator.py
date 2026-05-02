@@ -92,28 +92,6 @@ def _render_templates(
     return created
 
 
-def _copy_static(src_dir: Path, dest_dir: Path) -> list[Path]:
-    """Copy static (non-template) files."""
-    if not src_dir.exists():
-        return []
-
-    created: list[Path] = []
-    for root, _dirs, files in os.walk(str(src_dir)):
-        rel_root = Path(root).relative_to(src_dir)
-
-        for filename in files:
-            if filename.endswith(".j2"):
-                continue
-            src_file = Path(root) / filename
-            rel_file = rel_root / filename
-            dest_path = dest_dir / rel_file
-            dest_path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src_file, dest_path)
-            created.append(dest_path)
-
-    return created
-
-
 def _create_notebook(dest: Path, title: str, cells: list[dict]) -> None:
     """Create a valid .ipynb Jupyter notebook."""
     nb = {
@@ -156,12 +134,7 @@ def _make_code_cell(source: str) -> dict:
     }
 
 
-_cell_counter = 0
-
-
 def _cell_id() -> str:
-    global _cell_counter
-    _cell_counter += 1
     import uuid
 
     return uuid.uuid4().hex[:8]
