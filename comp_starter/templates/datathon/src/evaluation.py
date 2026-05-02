@@ -13,7 +13,6 @@ from sklearn.metrics import (
     mean_absolute_error,
     r2_score,
     classification_report,
-    confusion_matrix,
 )
 
 

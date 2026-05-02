@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 SUBMISSIONS_DIR = Path(__file__).parent.parent / "submissions"
@@ -29,7 +30,6 @@ def create_submission(
     Returns:
         Path to the saved submission file.
     """
-    import numpy as np
 
     submission = pd.DataFrame({
         id_col: test_df[id_col],
