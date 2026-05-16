@@ -291,12 +291,12 @@ def generate_project(name: str, project_type: str, kaggle_slug: str | None = Non
         for d in ["data/raw", "data/processed", "submissions", "models", "notebooks"]:
             (project_dir / d).mkdir(parents=True, exist_ok=True)
 
-    # Init git
-    _init_git(project_dir)
-
     # Kaggle data download
     if kaggle_slug and project_type in ("kaggle", "datathon", "hackathon"):
         _try_kaggle_download(project_dir, kaggle_slug)
+
+    # Init git (after data download to avoid tracking large files)
+    _init_git(project_dir)
 
     return project_dir
 
