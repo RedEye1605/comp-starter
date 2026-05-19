@@ -54,7 +54,16 @@ def train_model(
 
 
 def save_model(model, name: str, models_dir: Path | None = None) -> Path:
-    """Save a trained model to disk using joblib."""
+    """Save a trained model to disk using joblib.
+
+    Args:
+        model: Trained sklearn-compatible model to save.
+        name: Name for the saved model file (without .joblib extension).
+        models_dir: Directory to save the model. Defaults to ../models/.
+
+    Returns:
+        Path to the saved model file.
+    """
     import joblib
 
     dest = models_dir or MODELS_DIR
@@ -65,7 +74,15 @@ def save_model(model, name: str, models_dir: Path | None = None) -> Path:
 
 
 def load_model(name: str, models_dir: Path | None = None):
-    """Load a saved model."""
+    """Load a saved model from disk.
+
+    Args:
+        name: Name of the model file to load (without .joblib extension).
+        models_dir: Directory containing the model. Defaults to ../models/.
+
+    Returns:
+        The loaded trained model.
+    """
     import joblib
 
     src = models_dir or MODELS_DIR
