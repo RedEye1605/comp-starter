@@ -1,4 +1,10 @@
-"""Project generation logic."""
+"""Project generation logic for competition scaffolding.
+
+This module provides utilities for generating project scaffolds for various
+competition types including datathons, Kaggle competitions, hackathons, and
+research projects. It supports template rendering, notebook generation, and
+file versioning for submissions.
+"""
 
 from __future__ import annotations
 
@@ -16,7 +22,17 @@ CUSTOM_TEMPLATES_DIR = Path.home() / "Obsidian/RhendyVault/03_templates"
 
 
 def list_custom_templates() -> list[dict]:
-    """List custom templates from vault templates dir."""
+    """List custom templates from vault templates directory.
+    
+    Scans the custom templates directory for template directories and
+    Jinja2 template files (.j2).
+    
+    Returns:
+        list[dict]: List of template dictionaries containing:
+            - name (str): Template name
+            - path (str): Full path to template
+            - description (str): Template description
+    """
     results = []
     if CUSTOM_TEMPLATES_DIR.is_dir():
         for d in sorted(CUSTOM_TEMPLATES_DIR.iterdir()):
@@ -29,7 +45,17 @@ def list_custom_templates() -> list[dict]:
 
 
 def _get_template_dir(template_type: str) -> Path:
-    """Resolve the base template directory, with inheritance."""
+    """Resolve the base template directory with template inheritance.
+    
+    Implements inheritance where kaggle and hackathon templates extend
+    the datathon base template.
+    
+    Args:
+        template_type: The type of template (datathon, kaggle, hackathon, research).
+    
+    Returns:
+        Path: The base template directory path.
+    """
     # Inheritance chain: kaggle -> datathon, hackathon -> datathon
     if template_type in ("kaggle", "hackathon"):
         return TEMPLATES_DIR / "datathon"
@@ -233,7 +259,24 @@ def _try_kaggle_download(project_dir: Path, slug: str) -> None:
 
 
 def generate_project(name: str, project_type: str, kaggle_slug: str | None = None, custom_path: str | None = None) -> Path:
-    """Generate a full competition project scaffold."""
+    """Generate a full competition project scaffold.
+    
+    Creates a new project directory structure based on the selected template type,
+    renders Jinja2 templates, generates Jupyter notebooks, and initializes git.
+    
+    Args:
+        name: Project directory name.
+        project_type: Template type (datathon, kaggle, hackathon, research, custom).
+        kaggle_slug: Optional Kaggle competition slug for data download.
+        custom_path: Optional path to custom template directory.
+    
+    Returns:
+        Path: The created project directory path.
+    
+    Raises:
+        FileExistsError: If project directory already exists.
+        FileNotFoundError: If custom template directory not found.
+    """
     project_dir = Path.cwd() / name
 
     if project_dir.exists():
@@ -302,7 +345,21 @@ def generate_project(name: str, project_type: str, kaggle_slug: str | None = Non
 
 
 def submit_file(filepath: str, note: str = "") -> Path:
-    """Version and copy a submission file."""
+    """Version and copy a submission file.
+    
+    Copies the submission file to the submissions/ directory with an
+    auto-incrementing version number and creates metadata file.
+    
+    Args:
+        filepath: Path to the source submission file.
+        note: Optional description for this submission version.
+    
+    Returns:
+        Path: The path to the versioned submission file.
+    
+    Raises:
+        FileNotFoundError: If source file does not exist.
+    """
     src = Path(filepath).resolve()
     if not src.exists():
         raise FileNotFoundError(f"File not found: {filepath}")
