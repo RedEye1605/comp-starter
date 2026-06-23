@@ -40,7 +40,8 @@ _json_output = False
 _quiet_mode = False
 
 
-def _out(msg: str = ""):
+def _out(msg: str = "") -> None:
+    """Print a message to the console, respecting quiet mode."""
     if not _quiet_mode:
         console.print(msg)
 
